@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Triskelium - Automatización con IA para Empresas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Definición de la Paleta 4: MODO OSCURO PREMIUM --- */
+        :root {
+            --color-fondo-principal: #121212;     /* Gris Carbón para el fondo */
+            --color-fondo-secundario: #1A1A1A;   /* Gris más claro para tarjetas y secciones */
+            --color-texto-principal: #EFEFEF;     /* Blanco roto para textos principales */
+            --color-texto-secundario: #a9a9a9;  /* Gris claro para subtítulos y texto menos importante */
+            --color-acento-primario: #50C878;     /* Verde Esmeralda para énfasis y éxito */
+            --color-acento-cta: #FF00FF;          /* Magenta Brillante para CTAs */
+            --color-neutral-borde: #333333;       /* Gris para bordes y separadores */
+            --color-texto-cta: #000000;           /* Texto negro para el botón magenta */
+            --color-peligro: #FF5555;             /* Rojo brillante para contraste negativo */
+        }
+
+        /* --- Estilos Globales y Reseteo Básico --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--color-texto-principal);
+            line-height: 1.7;
+            background-color: var(--color-fondo-principal);
+        }
+
+        /* --- Utilidades y Componentes Reutilizables --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        section {
+            padding: 80px 0;
+            border-bottom: 1px solid var(--color-neutral-borde);
+        }
+        section:last-of-type {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            color: var(--color-texto-principal);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            text-align: center;
+            color: var(--color-texto-secundario);
+            max-width: 700px;
+            margin: 0 auto 50px auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--color-acento-cta);
+            color: var(--color-texto-cta);
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+            filter: brightness(1.1);
+        }
+
+        /* --- Estilos de la Sección HERO --- */
+        .hero {
+            padding-top: 100px;
+            padding-bottom: 100px;
+        }
+        .hero-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        .hero-text { flex: 1; text-align: left; }
+        .hero-image { flex: 0 0 40%; text-align: center; }
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            border: 1px solid var(--color-neutral-borde);
+            filter: brightness(0.8); /* Integra la imagen al tema oscuro */
+        }
+        .hero .section-title { text-align: left; line-height: 1.2; }
+        .hero .section-subtitle { text-align: left; margin: 20px 0 30px 0; max-width: 100%; }
+        .hero-strategy {
+            margin-top: 30px;
+            font-weight: 600;
+            color: var(--color-acento-primario); /* Énfasis en verde esmeralda */
+        }
+        
+        /* --- Estilos de la Sección de Comparación --- */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .comparison-column {
+            background-color: var(--color-fondo-secundario);
+            border: 1px solid var(--color-neutral-borde);
+            border-radius: 12px;
+            padding: 30px;
+        }
+        .comparison-column h3 { font-size: 1.5rem; margin-bottom: 20px; display: flex; align-items: center; }
+        .comparison-column h3::before { font-size: 1.8rem; margin-right: 15px; }
+        
+        .comparison-bad h3 { color: var(--color-peligro); }
+        .comparison-bad h3::before { content: '🔻'; }
+        
+        .comparison-good h3 { color: var(--color-acento-primario); }
+        .comparison-good h3::before { content: '🟢'; }
+
+        .comparison-column ul { list-style: none; }
+        .comparison-column ul li { margin-bottom: 15px; padding-left: 25px; position: relative; color: var(--color-texto-secundario); }
+        .comparison-column ul li::before { position: absolute; left: 0; top: 5px; font-weight: bold; }
+
+        .comparison-bad ul li::before { content: '–'; color: var(--color-peligro); }
+        .comparison-good ul li::before { content: '✓'; color: var(--color-acento-primario); }
+        .comparison-cta { text-align: center; margin-top: 50px; }
+        
+        /* --- Estilos de la Sección de Resultados --- */
+        .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        .result-card {
+            background-color: var(--color-fondo-secundario);
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid var(--color-neutral-borde);
+            transition: all 0.3s ease;
+        }
+        .result-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--color-acento-primario);
+        }
+        .result-card .icon { font-size: 2rem; margin-bottom: 15px; }
+        .result-card h3 { font-size: 1.4rem; color: var(--color-texto-principal); margin-bottom: 10px; }
+        .result-card h3 .highlight { color: var(--color-acento-primario); }
+        .result-card p { color: var(--color-texto-secundario); }
+
+        /* --- Estilos de la Sección de Servicios --- */
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; }
+        .service-card {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--color-fondo-principal); /* Mismo que el fondo para efecto 'flotante' */
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--color-neutral-borde);
+        }
+        .service-card .icon { font-size: 2.5rem; margin-bottom: 15px; color: var(--color-acento-primario);}
+        .service-card h3 { font-size: 1.4rem; color: var(--color-texto-principal); margin-bottom: 10px; }
+        .service-card p { margin-bottom: 20px; flex-grow: 1; color: var(--color-texto-secundario); }
+        .service-card .cta-button-small {
+            background: none;
+            border: 2px solid var(--color-acento-cta);
+            color: var(--color-acento-cta);
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            align-self: flex-start;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .service-card .cta-button-small:hover {
+            background-color: var(--color-acento-cta);
+            color: var(--color-texto-cta);
+        }
+        
+        /* --- Estilos de la Sección de Logos --- */
+        .logo-wall { text-align: center; }
+        .logo-grid { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 50px; margin-top: 40px; margin-bottom: 50px; }
+        .logo-grid img {
+            max-height: 40px;
+            filter: brightness(0) invert(1); /* Invierte los colores para que se vean blancos */
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        .logo-grid img:hover { opacity: 1; }
+        
+        /* --- Estilos de la Sección de Contacto --- */
+        #form-status {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: 600;
+            min-height: 24px; /* Para que no salte el layout */
+        }
+
+        .form-status-success {
+            color: var(--color-acento-primario); /* Verde Esmeralda */
+        }
+
+        .form-status-error {
+            color: var(--color-peligro); /* Rojo brillante */
+        }
+
+        /* --- Estilo para el botón deshabilitado --- */
+        .cta-button:disabled {
+            background-color: #555;
+            color: #999;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+        #contact-section { background-color: var(--color-fondo-secundario); }
+        #contact-section .container { max-width: 800px; }
+        .contact-form { margin-top: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-group.full-width { grid-column: 1 / -1; }
+        .form-group label { margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: var(--color-texto-secundario); }
+        .form-group input, .form-group select {
+            padding: 12px 15px;
+            border: 1px solid var(--color-neutral-borde);
+            background-color: var(--color-fondo-principal);
+            color: var(--color-texto-principal);
+            border-radius: 6px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--color-acento-primario);
+            box-shadow: 0 0 0 3px rgba(80, 200, 120, 0.25);
+        }
+        .form-group button { grid-column: 1 / -1; width: 100%; }
+
+        /* --- Estilo para el epígrafe del formulario --- */
+        .form-epigraph {
+            display: block; /* Asegura que ocupe su propia línea */
+            text-align: center;
+            margin-top: 15px; /* Espacio para separarlo del botón */
+            font-size: 0.85rem; /* Un poco más pequeño que el texto normal */
+            color: var(--color-texto-secundario); /* Usa el color gris sutil */
+            font-weight: 400; /* Peso de fuente normal */
+        }        
+
+        /* --- Estilos de la Sección de FAQ --- */
+        .faq-item { border-bottom: 1px solid var(--color-neutral-borde); padding: 20px 0; }
+        .faq-item:last-child { border-bottom: none; }
+        .faq-question { font-weight: 600; font-size: 1.2rem; color: var(--color-texto-principal); }
+        .faq-answer { margin-top: 10px; color: var(--color-texto-secundario); }
+
+        /* --- Estilos del Footer --- */
+        footer {
+            background-color: var(--color-fondo-principal);
+            color: var(--color-texto-secundario);
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid var(--color-neutral-borde);
+        }
+        footer a { color: var(--color-texto-principal); text-decoration: none; transition: color 0.3s ease;}
+        footer a:hover { color: var(--color-acento-primario); }
+
+        /* --- Media Queries para Responsividad (sin cambios mayores) --- */
+        @media (max-width: 992px) {
+            .results-grid, .services-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .section-title { font-size: 2.2rem; }
+            .hero-content { flex-direction: column; text-align: center; }
+            .hero-text, .hero .section-title, .hero .section-subtitle { text-align: center; }
+            .hero-image { margin-top: 40px; }
+            .comparison-grid, .contact-form { grid-template-columns: 1fr; }
+            .logo-grid { gap: 30px; }
+            .logo-grid img { max-height: 30px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- ======================= HERO SECTION ======================= -->
+    <section id="hero" class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1 class="section-title">Cada minuto que perdés en tareas manuales te cuesta plata.</h1>
+                <p class="section-subtitle">Nuestro sistema ya ayudó a empresas reales a dejar de depender de procesos manuales, integrar sus herramientas y escalar más rápido que su competencia.</p>
+                <p class="hero-strategy">No es magia. Es estrategia aplicada: Combinamos IA, automatización e integración para que escales sin fricción, sin sumar estructura y sin perder el control.</p>
+                <br><br>
+                <a href="#contact-section" class="cta-button">Solicitar consultoría gratis</a>
+            </div>
+            <div class="hero-image">
+                <!-- Reemplaza este enlace con una imagen real. Puse un placeholder. -->
+                <a href="#contact-section"><img src="https://iili.io/Fh7HDfs.md.png" alt="Líder de equipo analizando datos en una pantalla" border="0"></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= COMPARISON SECTION ======================= -->
+    <section id="comparison">
+        <div class="container">
+            <h2 class="section-title">Una solución realmente diferente</h2>
+            <p class="section-subtitle">Triskelium nació porque también estuvimos del otro lado. Pagamos agencias que prometían procesos, pero entregaban desorden. Y terminamos gastando más… para seguir igual.</p>
+            <div class="comparison-grid">
+                <div class="comparison-column comparison-bad">
+                    <h3>Lo que hacen la mayoría</h3>
+                    <ul>
+                        <li>Te instalan herramientas que no hablan entre sí.</li>
+                        <li>Automatizan un proceso, pero te complican otros tres.</li>
+                        <li>Te llenan de reportes que no podés usar.</li>
+                        <li>Te hacen depender de ellos para todo.</li>
+                    </ul>
+                </div>
+                <div class="comparison-column comparison-good">
+                    <h3>Lo que hacemos nosotros</h3>
+                    <ul>
+                        <li>Diseñamos sistemas que funcionan de verdad.</li>
+                        <li>Integramos tus herramientas actuales (no te vendemos nuevas).</li>
+                        <li>Automatizamos flujos críticos con IA.</li>
+                        <li>Te damos control total, sin que todo dependa de vos.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="comparison-cta">
+                <a href="#contact-section" class="cta-button">Quiero agendar una llamada con ustedes</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= RESULTS SECTION ======================= -->
+    <section id="results">
+        <div class="container">
+            <h2 class="section-title">Impacto real. Resultados medibles.</h2>
+            <p class="section-subtitle">En Triskelium no vendemos promesas. Diseñamos soluciones que escalan negocios.</p>
+            <div class="results-grid">
+                <div class="result-card">
+                    <div class="icon">🚀</div>
+                    <h3><span class="highlight">Facturación x3 para empresa B2C de retail</span></h3>
+                    <p>Automatizamos su proceso de captación y nutrición de leads, triplicando su facturación en 6 meses.</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">📊</div>
+                    <h3><span class="highlight">+100 millones</span> de registros procesados</h3>
+                    <p>Creamos un sistema a medida para extracción, validación y organización de datos comerciales masivos. Más velocidad, menos errores, decisiones más inteligentes.</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">📦</div>
+                    <h3><span class="highlight">+27%</span> en satisfacción del cliente (CSAT)</h3>
+                    <p>Rediseñamos la gestión de pedidos en una empresa con operaciones complejas: automatizamos flujos, mejoramos la experiencia y los tiempos de respuesta.</p>
+                </div>
+                <div class="result-card">
+                    <div class="icon">🧠</div>
+                    <h3><span class="highlight">IA</span> que atiende 24/7</h3>
+                    <p>Implementamos un agente conversacional hiperrealista conectado a los procesos internos. ¿El resultado? Mayor NPS y mejor CSAT. Hasta +40% de consultas atendidas fuera de horario laboral y reducción del 30% en tiempo de espera del cliente.</p>
+                </div>
+            </div>
+             <div class="comparison-cta">
+                <a href="#contact-section" class="cta-button">Descubrir más sobre automatizaciones</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ======================= SERVICES SECTION ======================= -->
+    <section id="services">
+        <div class="container">
+            <h2 class="section-title">Diseñamos soluciones reales, para negocios reales.</h2>
+            <p class="section-subtitle">No creemos en recetas genéricas. Cada proyecto es 100% a medida porque cada empresa tiene su propio caos. Nosotros nos adaptamos a eso, y lo mejoramos.</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="icon">🤖</div>
+                    <h3>Agentes con IA que atienden (y entienden)</h3>
+                    <p>Creamos asistentes conversacionales hiperrealistas por texto o voz que responden en nombre de tu empresa, integrados a tus procesos internos y entrenados para resolver de verdad.</p>
+                    <a href="#contact-section" class="cta-button-small">Conocer más</a>
+                </div>
+                <div class="service-card">
+                    <div class="icon">🔁</div>
+                    <h3>Automatización inteligente que libera tu operación</h3>
+                    <p>Automatizamos tareas críticas, flujos repetitivos y procesos de backoffice. Gana tiempo tu equipo. Ganás control vos.</p>
+                    <a href="#contact-section" class="cta-button-small">Conocer más</a>
+                </div>
+                <div class="service-card">
+                    <div class="icon">📊</div>
+                    <h3>Datos que sirven, no que estorban</h3>
+                    <p>Convertimos tu caos de planillas y reportes en dashboards simples, claros y accionables. Para que tomes decisiones con confianza, en tiempo real.</p>
+                    <a href="#contact-section" class="cta-button-small">Conocer más</a>
+                </div>
+                <div class="service-card">
+                    <div class="icon">🔗</div>
+                    <h3>Sistemas que se integran (y escalan)</h3>
+                    <p>Hacemos que tus herramientas trabajen juntas: CRM, WhatsApp, emails, Drive, planillas, bots... Todo conectado. Todo funcionando sin fricción.</p>
+                    <a href="#contact-section" class="cta-button-small">Conocer más</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= LOGOS SECTION ======================= -->
+    <section id="logos">
+        <div class="container logo-wall">
+            <h2 class="section-title" style="font-size: 1.8rem;">Algunas de las empresas que ya se sumaron a trabajar con nosotros</h2>
+            <div class="logo-grid">
+                <!-- Reemplaza estos con los logos de tus clientes. Son placeholders. El filtro CSS los hará blancos. -->
+                <img src="https://grantsolutions.es/wp-content/uploads/2023/12/Logo-Grant.png" alt="Grant Logo">
+                <img src="https://digitalya.es/wp-content/uploads/2023/03/Digitalya-logo-1.png" alt="Digital YA Logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg" alt="Netflix Logo">
+            </div>
+            <a href="#contact-section" class="cta-button">Quiero ser parte</a>
+        </div>
+    </section>
+
+    <!-- ======================= CONTACT FORM SECTION ======================= -->
+	<section id="contact-section">
+	    <div class="container">
+        	<h2 class="section-title">¿Querés entender cómo la IA puede mejorar la rentabilidad de tu negocio?</h2>
+	        <p class="section-subtitle">Si te sentís atrapado en procesos que consumen tiempo, energía y plata, completá el formulario y agendamos una reunión. Te vamos a mostrar, con ejemplos reales, cómo podrías escalar tu operación.</p>
+        
+        	<!-- *** MODIFICACIÓN: Añadido id="contactForm" *** -->
+	        <form class="contact-form" id="contactForm">
+        	    <div class="form-group">
+                	<label for="name">Nombre</label>
+	                <input type="text" id="name" name="name" required>
+        	    </div>
+	            <div class="form-group">
+        	        <label for="company-name">Nombre de tu empresa</label>
+	                <input type="text" id="company-name" name="company-name" required>
+        	    </div>
+	            <div class="form-group">
+        	        <label for="email">Correo electrónico</label>
+	                <input type="email" id="email" name="email" required>
+        	    </div>
+    	         <div class="form-group">
+        	        <label for="phone">Teléfono</label>
+                	<input type="tel" id="phone" name="phone">
+	            </div>
+        	    <div class="form-group full-width">
+                	<label for="company-size">Tamaño de tu empresa</label>
+	                <select id="company-size" name="company-size" required>
+        	            <option value="">Seleccioná una opción...</option>
+                	    <option value="1-10">1-10 empleados</option>
+	                    <option value="11-50">11-50 empleados</option>
+        	            <option value="50+">Más de 50 empleados</option>
+                	</select>
+	            </div>
+        	    <div class="form-group full-width">
+                	<!-- *** MODIFICACIÓN: Añadido id="submitButton" *** -->
+	                <button type="submit" class="cta-button" id="submitButton">Quiero una reunión con Triskelium</button>
+                        <small class="form-epigraph">Nos pondremos en contacto contigo a la brevedad. Tu información está segura.</small>
+        	    </div>
+	        </form>
+        
+        	<!-- *** NUEVO ELEMENTO: Para mostrar mensajes de éxito o error *** -->
+	        <div id="form-status"></div>
+	    </div>
+	</section>
+
+    <!-- ======================= FAQ SECTION ======================= -->
+    <section id="faq">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title">Preguntas Frecuentes</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <p class="faq-question">¿Cuánto tiempo tardan en implementar una solución?</p>
+                    <p class="faq-answer">Depende de la complejidad. Una automatización simple puede estar lista en una semana, mientras que un sistema integrado completo puede llevar de 4 a 8 semanas. Siempre priorizamos la entrega de valor rápido.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-question">¿Tengo que cambiar las herramientas que ya uso?</p>
+                    <p class="faq-answer">No necesariamente. Nuestro primer objetivo es integrar y potenciar lo que ya tenés. Solo recomendamos cambiar de herramienta si es absolutamente necesario para alcanzar tus objetivos y te genera un ahorro a largo plazo.</p>
+                </div>
+                <div class="faq-item">
+                    <p class="faq-question">¿Qué costo tiene? ¿Es una suscripción o un pago único?</p>
+                    <p class="faq-answer">Ofrecemos ambos modelos. Proyectos específicos se cotizan con un pago único. Para soporte y optimización continua, tenemos planes de suscripción flexibles. Cada propuesta es a medida de tus necesidades.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================= FOOTER ======================= -->
+    <footer>
+        <div class="container">
+            <p>© 2024 Triskelium. Todos los derechos reservados. | <a href="#">Política de Privacidad</a></p>
+        </div>
+    </footer>
+<script>
+    // Seleccionamos los elementos del DOM que vamos a necesitar
+    const contactForm = document.getElementById('contactForm');
+    const submitButton = document.getElementById('submitButton');
+    const formStatus = document.getElementById('form-status');
+
+    // Añadimos un "escuchador" para el evento 'submit' del formulario
+    contactForm.addEventListener('submit', async function(event) {
+        // 1. Prevenimos el comportamiento por defecto del formulario (que es recargar la página)
+        event.preventDefault();
+
+        // Guardamos el texto original del botón y lo deshabilitamos para evitar envíos múltiples
+        const originalButtonText = submitButton.textContent;
+        submitButton.disabled = true;
+        submitButton.textContent = 'Enviando...';
+        formStatus.textContent = ''; // Limpiamos mensajes anteriores
+        formStatus.className = '';
+
+        // 2. Recopilamos los datos de los campos del formulario
+        const formData = {
+            name: document.getElementById('name').value,
+            company_name: document.getElementById('company-name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            company_size: document.getElementById('company-size').value,
+        };
+
+        // 3. Definimos la URL del webhook
+        const webhookUrl = 'https://automate.triskeliumhub.com/webhook/formulario-contacto';
+
+        try {
+            // 4. Usamos fetch para enviar los datos como una solicitud POST
+            const response = await fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // Convertimos el objeto de JavaScript a una cadena de texto en formato JSON
+                body: JSON.stringify(formData),
+            });
+
+            // Verificamos si la respuesta del servidor fue exitosa (código 2xx)
+            if (response.ok) {
+                // 5. Mostramos un mensaje de éxito al usuario
+                formStatus.textContent = '¡Gracias! Hemos recibido tu mensaje. Nos pondremos en contacto pronto.';
+                formStatus.className = 'form-status-success';
+                contactForm.reset(); // Limpiamos el formulario
+            } else {
+                // Si el servidor responde con un error (ej. 404, 500)
+                throw new Error('Hubo un problema con el envío. Por favor, intentá de nuevo.');
+            }
+        } catch (error) {
+            // Si hay un error de red o un error en la lógica anterior
+            console.error('Error al enviar el formulario:', error);
+            formStatus.textContent = 'Error: No se pudo enviar el mensaje. Por favor, verificá tu conexión o intentá más tarde.';
+            formStatus.className = 'form-status-error';
+        } finally {
+            // Este bloque se ejecuta siempre, tanto si hubo éxito como si hubo error
+            // Habilitamos el botón nuevamente y restauramos su texto original
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+        }
+    });
+</script>
+</body>
+</html>
